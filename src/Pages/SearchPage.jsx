@@ -42,10 +42,11 @@ const SearchPage = () => {
                     specialties = [specialties];
                 }
             }
-
+            // Ensure it's an array and remove duplicates
+            const specArray = Array.isArray(specialties) ? specialties : [specialties];
             return {
                 ...h,
-                specialties: Array.isArray(specialties) ? specialties : []
+                specialties: [...new Set(specArray.filter(Boolean))] // filter out empty values
             };
         });
 
@@ -58,10 +59,10 @@ const SearchPage = () => {
     }, []);
 
     const allSpecialties = React.useMemo(() => {
-        return [
-            "All",
-            ...new Set(hospitalData.flatMap(h => h.specialties || []))
-        ];
+        const uniqueSpecialties = Array.from(
+            new Set(hospitalData.flatMap(h => h.specialties || []))
+        );
+        return ["All", ...uniqueSpecialties];
     }, [hospitalData]);
 
     return (
