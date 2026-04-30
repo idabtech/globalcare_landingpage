@@ -44,7 +44,7 @@ const PackagesPage = () => {
                             <p style={{ color: C.slateL, fontSize: 13, marginBottom: 16 }}>at {p.hospital}</p>
                             <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 12, padding: 16, marginBottom: 20 }}>
                                 <div style={{ fontSize: 11, fontWeight: 800, color: C.slateL, marginBottom: 10, textTransform: "uppercase" }}>Includes:</div>
-                                {p.includes.map(inc => <div key={inc} style={{ fontSize: 13, color: C.white, marginBottom: 6, display: "flex", gap: 8 }}>
+                                {p.includes.map(inc => <div key={inc} style={{ fontSize: 13, color: C.slateL, marginBottom: 6, display: "flex", gap: 8 }}>
                                     <span style={{ color: C.tealL }}>✓</span> {inc}
                                 </div>)}
                             </div>

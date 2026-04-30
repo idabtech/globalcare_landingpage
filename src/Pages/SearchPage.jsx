@@ -9,10 +9,11 @@ import { AppContext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
 
 const SearchPage = () => {
-    const { setSelectedHospital, searchQuery, setSearchQuery, selectedSpecialty, setSelectedSpecialty } = React.useContext(AppContext);
+    const { setSelectedHospital, searchQuery, setSearchQuery, selectedSpecialty, setSelectedSpecialty, setHospitalTab } = React.useContext(AppContext);
     const nav = useNavigate();
     const [hospitalData, setHospitalData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedRegion, setSelectedRegion] = useState("All Regions");
 
     // const filtered = hospitalData.filter(h => {
     //     const q = searchQuery.toLowerCase();
@@ -28,6 +29,9 @@ const SearchPage = () => {
             ) &&
             (selectedSpecialty === "All" ||
                 h.specialties?.includes(selectedSpecialty)
+            ) && 
+            (selectedRegion === "All Regions" ||
+                h.country === selectedRegion
             )
         );
     });
@@ -65,17 +69,24 @@ const SearchPage = () => {
         return ["All", ...uniqueSpecialties];
     }, [hospitalData]);
 
+    const allRegions = React.useMemo(() => {
+        const uniqueRegions = Array.from(
+            new Set(hospitalData.map(h => h.country).filter(Boolean))
+        );
+        return ["All Regions", ...uniqueRegions];
+    }, [hospitalData]);
+
     return (
         <div style={{ paddingTop: 80, padding: "80px 48px", minHeight: "100vh" }}>
             <div style={{ maxWidth: 1200, margin: "0 auto" }}>
                 <div style={{ marginBottom: 32 }}>
                     <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 8 }}>Find Your Hospital</h2>
-                    <p style={{ color: C.slateL }}>Browse {HOSPITALS.length} world-class facilities</p>
+                    <p style={{ color: C.slateL }}>Browse {hospitalData.length} world-class facilities</p>
                 </div>
                 <div style={{ display: "flex", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="🔍 Search hospital, country, specialty..." style={{ flex: 1, minWidth: 260, padding: "12px 18px", borderRadius: 12, background: C.card, border: `1px solid ${C.border}`, color: C.white, fontSize: 14, outline: "none" }} />
-                    <select style={{ padding: "0 18px", borderRadius: 12, background: C.navy, border: `1px solid ${C.border}`, color: C.white }}>
-                        <option>All Regions</option>{["Thailand", "India", "Turkey", "Singapore"].map(c => <option key={c}>{c}</option>)}
+                    <select value={selectedRegion} onChange={e => setSelectedRegion(e.target.value)} style={{ padding: "0 18px", borderRadius: 12, border: `1px solid ${C.border}`, color: C.black }}>
+                        {allRegions.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                 </div>
                 <div style={{ display: "flex", gap: 8, marginBottom: 32, flexWrap: "wrap" }}>
@@ -86,7 +97,11 @@ const SearchPage = () => {
                     })}
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(360px,1fr))", gap: 20 }}>
-                    {filtered.length === 0 ? (
+                    {loading ? (
+                        <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "40px 0", color: C.slateL, fontSize: 16 }}>
+                            Loading hospitals...
+                        </div>
+                    ) : filtered.length === 0 ? (
                         <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "40px 0", color: C.slateL, fontSize: 16 }}>
                             Hospital data is not found
                         </div>
@@ -103,7 +118,7 @@ const SearchPage = () => {
                             </div>
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
                                 <div><div style={{ color: C.goldL, fontWeight: 700, fontSize: 14 }}>⭐ {h.rating}</div><div style={{ fontSize: 11, color: C.slateL }}>{h.reviews} reviews</div></div>
-                                <Btn onClick={() => { setSelectedHospital(h); nav("/details"); }}>View Details</Btn>
+                                <Btn onClick={() => { setSelectedHospital(h); setHospitalTab("overview"); nav("/details"); }}>View Details</Btn>
                             </div>
                         </Card>
                     )))}
