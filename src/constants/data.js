@@ -1,6 +1,6 @@
 export const C = {
     bg: "#050E1C", navy: "#091628", card: "rgba(255,255,255,0.035)",
-    border: "rgba(255,255,255,0.07)", teal: "#0BB5A0", tealL: "#14D4BC",
+    border: "rgb(107 97 97 / 26%)", teal: "#0BB5A0", tealL: "#14D4BC",
     gold: "#D4A843", goldL: "#F0C96B", slate: "#4A6080", slateL: "#7A95B0",
     green: "#2ECC8A", red: "#E05252", purple: "#8B5CF6", blue: "#3B82F6",
     orange: "#F97316", white: "#FFFFFF",
