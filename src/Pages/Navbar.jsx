@@ -50,7 +50,7 @@ const Navbar = () => {
                     </div>
                 ))}
                 <button 
-                    onClick={() => window.open("https://adminglobalcare.vercel.app/", "_blank")}
+                    onClick={() => window.open(import.meta.env.VITE_ADMIN_URL, "_blank")}
                     style={{ 
                         background: `linear-gradient(135deg,${C.teal},${C.tealL})`, 
                         color: "#fff", 
