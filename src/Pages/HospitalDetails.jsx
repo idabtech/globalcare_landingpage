@@ -23,7 +23,7 @@ const HospitalDetails = () => {
                             <h1 style={{ fontSize: 28, fontWeight: 800 }}>{h.name}</h1>
                             <p style={{ color: C.slateL }}>{h.city}, {h.country}</p>
                         </div>
-                        <Btn onClick={() => nav("scheduler")} style={{ padding: "12px 24px" }}>Request Quote</Btn>
+                        <Btn onClick={() => window.open(import.meta.env.VITE_ADMIN_URL, "_blank")} style={{ padding: "12px 24px" }}>Request Quote</Btn>
                     </div>
                     <div style={{ display: "flex", gap: 4, marginTop: 32 }}>
                         {["overview", "doctors", "specialties"].map(t => {
