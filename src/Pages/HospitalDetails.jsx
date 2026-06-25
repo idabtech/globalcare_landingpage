@@ -11,6 +11,8 @@ const HospitalDetails = () => {
     const h = selectedHospital || HOSPITALS[0];
     const nav = useNavigate();
 
+    const activeTab = ["overview", "doctors", "specialties"].includes(hospitalTab) ? hospitalTab : "overview";
+
     return (
         <div style={{ paddingTop: 10, minHeight: "100vh" }}>
             <div style={{ padding: "40px 48px 0", borderBottom: `1px solid ${C.border}` }}>
@@ -28,14 +30,14 @@ const HospitalDetails = () => {
                     <div style={{ display: "flex", gap: 4, marginTop: 32 }}>
                         {["overview", "doctors", "specialties"].map(t => {
                             return (
-                                <button key={t} onClick={() => setHospitalTab(t)} style={{ padding: "10px 20px", borderRadius: "8px 8px 0 0", cursor: "pointer", background: hospitalTab === t ? C.white : "transparent", color: hospitalTab === t ? C.tealL : C.slateL, border: hospitalTab === t ? `1px solid ${C.border}` : "none", borderBottom: "none", textTransform: "capitalize" }}>{t}</button>
+                                <button key={t} onClick={() => setHospitalTab(t)} style={{ padding: "10px 20px", borderRadius: "8px 8px 0 0", cursor: "pointer", background: activeTab === t ? C.white : "transparent", color: activeTab === t ? C.tealL : C.slateL, border: activeTab === t ? `1px solid ${C.border}` : "none", borderBottom: "none", textTransform: "capitalize" }}>{t}</button>
                             )
                         })}
                     </div>
                 </div>
             </div>
             <div style={{ padding: "32px 48px", maxWidth: 1100, margin: "0 auto" }}>
-                {hospitalTab === "overview" && (
+                {activeTab === "overview" && (
                     <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 32 }}>
                         <div>
                             <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12 }}>About the Institution</h3>
@@ -79,7 +81,7 @@ const HospitalDetails = () => {
                         </Card>
                     </div>
                 )}
-                {hospitalTab === "doctors" && (
+                {activeTab === "doctors" && (
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 20 }}>
                         {h.doctors && h.doctors.length > 0 ? (
                             h.doctors.map(d => (
@@ -98,7 +100,7 @@ const HospitalDetails = () => {
                         )}
                     </div>
                 )}
-                {hospitalTab === "specialties" && (
+                {activeTab === "specialties" && (
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 20 }}>
                         {h.specialties && Array.isArray(h.specialties) && h.specialties.length > 0 ? (
                             h.specialties.map((s, idx) => (
