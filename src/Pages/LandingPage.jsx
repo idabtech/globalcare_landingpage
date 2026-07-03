@@ -7,19 +7,19 @@ import { hospitalService } from '../service/hospital.service';
 
 /* ─── Design tokens ──────────────────────────────────────────── */
 const T = {
-    navy:    '#FFFFFF',
+    navy: '#FFFFFF',
     navyMid: '#F8F9FA',
-    card:    'rgba(0,0,0,0.03)',
-    border:  'rgba(0,0,0,0.08)',
-    teal:    '#0BB5A0',
-    tealL:   '#14D4BC',
-    tealXL:  '#5EEADA',
-    gold:    '#D4A843',
-    goldL:   '#F0C96B',
-    slate:   '#2C3E50',
-    slateL:  '#5A6C7D',
-    green:   '#2ECC8A',
-    white:   '#000000',
+    card: 'rgba(0,0,0,0.03)',
+    border: 'rgba(0,0,0,0.08)',
+    teal: '#0BB5A0',
+    tealL: '#14D4BC',
+    tealXL: '#5EEADA',
+    gold: '#D4A843',
+    goldL: '#F0C96B',
+    slate: '#2C3E50',
+    slateL: '#5A6C7D',
+    green: '#2ECC8A',
+    white: '#000000',
     offWhite: '#F4F6FA',
 };
 
@@ -268,7 +268,7 @@ const LandingPage = () => {
                                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 16px 40px ${T.teal}55`; }}
                                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 8px 32px ${T.teal}44`; }}
                             >Find a Hospital →</button>
-                            <button onClick={() => nav('patient')} style={{
+                            <button onClick={() => window.open(import.meta.env.VITE_ADMIN_URL, "_blank")} style={{
                                 padding: '14px 30px',
                                 borderRadius: 12,
                                 border: `1px solid ${T.border}`,
@@ -394,10 +394,10 @@ const LandingPage = () => {
             }}>
                 <div style={{ position: 'absolute', top: -60, right: -60, width: 320, height: 320, borderRadius: '50%', background: `radial-gradient(circle, ${T.teal}15, transparent 70%)`, pointerEvents: 'none' }} />
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 40, position: 'relative', zIndex: 1 }}>
-                    <StatNum value={340}  suffix='+'    label='Accredited Hospitals' desc='JCI-certified worldwide'        color={T.tealL}  active={statsVisible} />
-                    <StatNum value={68}                label='Countries'             desc='Global healthcare network'      color={T.goldL}  active={statsVisible} />
-                    <StatNum value={80}   suffix='%'   label='Average Savings'      desc='Compared to US prices'          color='#A78BFA'  active={statsVisible} />
-                    <StatNum value={49}   suffix='/5'  label='Patient Rating'        desc='Based on 10,000+ reviews'       color={T.green}  active={statsVisible} />
+                    <StatNum value={340} suffix='+' label='Accredited Hospitals' desc='JCI-certified worldwide' color={T.tealL} active={statsVisible} />
+                    <StatNum value={68} label='Countries' desc='Global healthcare network' color={T.goldL} active={statsVisible} />
+                    <StatNum value={80} suffix='%' label='Average Savings' desc='Compared to US prices' color='#A78BFA' active={statsVisible} />
+                    <StatNum value={49} suffix='/5' label='Patient Rating' desc='Based on 10,000+ reviews' color={T.green} active={statsVisible} />
                 </div>
             </section>
 
@@ -630,7 +630,7 @@ const LandingPage = () => {
                             onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 16px 40px ${T.teal}55`; }}
                             onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 8px 32px ${T.teal}44`; }}
                         >Find a Hospital →</button>
-                        <button onClick={() => nav('coordinator')} style={{
+                        {/* <button onClick={() => nav('coordinator')} style={{
                             padding: '12px 36px', borderRadius: 12,
                             border: `1px solid ${T.border}`,
                             background: T.card,
@@ -639,7 +639,7 @@ const LandingPage = () => {
                         }}
                             onMouseEnter={e => { e.currentTarget.style.borderColor = `${T.teal}44`; e.currentTarget.style.color = T.white; }}
                             onMouseLeave={e => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.color = T.slateL; }}
-                        >Talk to a Coordinator</button>
+                        >Talk to a Coordinator</button> */}
                     </div>
                 </div>
             </section>
