@@ -83,8 +83,8 @@ const PackagesPage = () => {
         nav("/details");
     };
 
-    const filtered = pkgFilter === "All" 
-        ? packages 
+    const filtered = pkgFilter === "All"
+        ? packages
         : packages.filter(p => p.specialty === pkgFilter);
 
     const categories = ["All", ...new Set(packages.map(p => p.specialty).filter(Boolean))];
@@ -153,7 +153,7 @@ const PackagesPage = () => {
                                     ))}
                                 </div>
                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                                    <div style={{ fontSize: 13, color: C.slateL }}>⏱ Duration: <span style={{ color: C.white, fontWeight: 700 }}>{p.duration || 'Flexible'}</span></div>
+                                    <div style={{ fontSize: 13, color: C.slateL }}>⏱ Duration: <span style={{ color: C.black, fontWeight: 700 }}>{p.duration || 'Flexible'}</span></div>
                                     {p.save_percentage > 0 && (
                                         <div style={{ background: "rgba(34,201,122,0.12)", color: C.green, padding: "4px 10px", borderRadius: 8, fontSize: 12, fontWeight: 800 }}>
                                             Save {p.save_percentage}%
