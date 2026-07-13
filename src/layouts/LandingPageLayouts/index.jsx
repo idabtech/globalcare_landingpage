@@ -1,3 +1,4 @@
+
 import { Outlet } from 'react-router-dom';
 import Navbar from '../../Pages/Navbar';
 
@@ -12,6 +13,7 @@ const C = {
     slateL: "#a0aec0",
     white: "#f0f4ff",
     red: "#e04c52",
+    black: "#000000",
 };
 
 const LandingPageLayout = () => {

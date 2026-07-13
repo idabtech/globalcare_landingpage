@@ -89,6 +89,12 @@ const LandingPage = () => {
     const [scrollY, setScrollY] = useState(0);
     const [hospitalData, setHospitalData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [publicStats, setPublicStats] = useState({
+        totalHospitals: 10,
+        totalCountries: 0,
+        totalPatients: 0,
+        avgSavings: 0
+    });
     const statsRef = useRef(null);
 
     useEffect(() => {
@@ -127,9 +133,85 @@ const LandingPage = () => {
         setLoading(false);
     };
 
+    const getPublicStats = async () => {
+        try {
+            const data = await hospitalService.getPublicStats();
+
+            if (data && data.success) {
+                setPublicStats({
+                    totalHospitals: data.totalHospitals || 0,
+                    totalCountries: data.totalCountries || 0,
+                    totalPatients: data.totalPatients || 0,
+                    avgSavings: data.avgSavings || 0
+                });
+            }
+        } catch (e) {
+            console.error("Failed to load public stats:", e);
+        }
+    };
+
     useEffect(() => {
         getHospitalData();
+        getPublicStats();
     }, []);
+
+    const popularDestinations = React.useMemo(() => {
+        if (!hospitalData || hospitalData.length === 0) {
+            return [
+                { flag: '🇹🇭', country: 'Thailand', city: 'Bangkok', save: '70%', spec: 'Cardiology, Dental' },
+                { flag: '🇮🇳', country: 'India', city: 'Chennai', save: '80%', spec: 'Oncology, Neurology' },
+                { flag: '🇹🇷', country: 'Turkey', city: 'Istanbul', save: '75%', spec: 'Cosmetic, Dental' },
+                { flag: '🇸🇬', country: 'Singapore', city: 'Singapore', save: '45%', spec: 'Cardiology, Cancer' },
+            ];
+        }
+
+        const groups = {};
+        hospitalData.forEach(h => {
+            if (!h.country) return;
+            if (!groups[h.country]) {
+                groups[h.country] = [];
+            }
+            groups[h.country].push(h);
+        });
+
+        const getCountryFlagEmoji = (countryName) => {
+            if (!countryName) return "🌐";
+            const name = countryName.toLowerCase().trim();
+            if (name === "thailand") return "🇹🇭";
+            if (name === "india") return "🇮🇳";
+            if (name === "turkey" || name === "turkiye") return "🇹🇷";
+            if (name === "malaysia") return "🇲🇾";
+            if (name === "singapore") return "🇸🇬";
+            return "🌐";
+        };
+
+        const list = Object.entries(groups).map(([country, items]) => {
+            const cities = items.map(x => x.city).filter(Boolean);
+            const city = cities.length > 0 ? cities[0] : '';
+            const specs = [...new Set(items.flatMap(x => x.specialties || []))].slice(0, 2).join(', ');
+            
+            const savingsValues = items.map(x => {
+                const num = parseInt(x.savings || '60', 10);
+                return isNaN(num) ? 60 : num;
+            });
+            const avgSavings = savingsValues.length > 0 ? Math.round(savingsValues.reduce((a, b) => a + b, 0) / savingsValues.length) : 60;
+
+            return {
+                flag: getCountryFlagEmoji(country),
+                country,
+                city,
+                save: `${avgSavings}%`,
+                spec: specs || 'General Care'
+            };
+        });
+
+        return list.length > 0 ? list.slice(0, 4) : [
+            { flag: '🇹🇭', country: 'Thailand', city: 'Bangkok', save: '70%', spec: 'Cardiology, Dental' },
+            { flag: '🇮🇳', country: 'India', city: 'Chennai', save: '80%', spec: 'Oncology, Neurology' },
+            { flag: '🇹🇷', country: 'Turkey', city: 'Istanbul', save: '75%', spec: 'Cosmetic, Dental' },
+            { flag: '🇸🇬', country: 'Singapore', city: 'Singapore', save: '45%', spec: 'Cardiology, Cancer' },
+        ];
+    }, [hospitalData]);
 
     /* ── shared reveal style ── */
     const reveal = (delay = 0) => ({
@@ -213,7 +295,7 @@ const LandingPage = () => {
                 </div>
 
                 <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', position: 'relative', zIndex: 1 }}>
-                    <div style={{ maxWidth: 640 }}>
+                    <div>
                         {/* eyebrow */}
                         <div style={{ ...reveal(0), display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
                             <div style={{
@@ -224,7 +306,7 @@ const LandingPage = () => {
                                 flexShrink: 0,
                             }} />
                             <span style={{ fontSize: 13, color: T.slateL, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500 }}>
-                                340+ Accredited Hospitals · 68 Countries
+                                {publicStats.totalHospitals}+ Accredited Hospitals · {publicStats.totalCountries} Countries
                             </span>
                         </div>
 
@@ -248,7 +330,7 @@ const LandingPage = () => {
                         </h1>
 
                         <p style={{ ...reveal(0.2), fontSize: 18, color: T.slateL, lineHeight: 1.75, marginBottom: 40, maxWidth: 500 }}>
-                            Connect with JCI‑accredited hospitals in 68 countries. Save up to 80% on medical procedures without compromising quality.
+                            Connect with JCI‑accredited hospitals in {publicStats.totalCountries} countries. Save up to {publicStats.avgSavings}% on medical procedures without compromising quality.
                         </p>
 
                         <div style={{ ...reveal(0.3), display: 'flex', gap: 14, flexWrap: 'wrap' }}>
@@ -286,11 +368,11 @@ const LandingPage = () => {
                         </div>
 
                         {/* quick stats row */}
-                        <div style={{ ...reveal(0.45), display: 'flex', gap: 40, marginTop: 56, paddingTop: 40, borderTop: `1px solid ${T.border}` }}>
+                        <div style={{ ...reveal(0.45), display: 'flex', gap: 40, marginTop: 56, paddingTop: 40, borderTop: `1px solid ${T.border}`, width: 'fit-content' }}>
                             {[
-                                { n: '1M+', l: 'Patients Served' },
-                                { n: '68', l: 'Countries' },
-                                { n: '80%', l: 'Avg. Savings' },
+                                { n: publicStats.totalPatients > 0 ? `${(publicStats.totalPatients).toLocaleString()}+` : '1M+', l: 'Patients Served' },
+                                { n: publicStats.totalCountries.toString(), l: 'Countries' },
+                                { n: `${publicStats.avgSavings}%`, l: 'Avg. Savings' },
                             ].map(({ n, l }) => (
                                 <div key={l}>
                                     <div style={{ fontSize: 30, fontWeight: 900, color: T.tealL, letterSpacing: -1 }}>{n}</div>
@@ -316,12 +398,7 @@ const LandingPage = () => {
                     zIndex: 2,
                 }}>
                     <div style={{ fontSize: 12, fontWeight: 700, color: T.slateL, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 16 }}>Popular Destinations</div>
-                    {[
-                        { flag: '🇹🇭', country: 'Thailand', city: 'Bangkok', save: '70%', spec: 'Cardiology, Dental' },
-                        { flag: '🇮🇳', country: 'India', city: 'Chennai', save: '80%', spec: 'Oncology, Neurology' },
-                        { flag: '🇹🇷', country: 'Turkey', city: 'Istanbul', save: '75%', spec: 'Cosmetic, Dental' },
-                        { flag: '🇸🇬', country: 'Singapore', city: 'Singapore', save: '45%', spec: 'Cardiology, Cancer' },
-                    ].map(d => (
+                    {popularDestinations.map(d => (
                         <div key={d.country} onClick={() => nav('search')}
                             style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '11px 0', borderBottom: `1px solid ${T.border}`, cursor: 'pointer', transition: 'opacity 0.2s' }}
                             onMouseEnter={e => { e.currentTarget.style.opacity = '0.75'; }}
@@ -383,7 +460,7 @@ const LandingPage = () => {
             </section>
 
             {/* ── STATS ── */}
-            <section ref={statsRef} style={{
+            {/* <section ref={statsRef} style={{
                 margin: '0 56px',
                 borderRadius: 24,
                 background: `linear-gradient(135deg, ${T.teal}22 0%, ${T.navyMid} 40%, ${T.gold}0F 100%)`,
@@ -399,10 +476,10 @@ const LandingPage = () => {
                     <StatNum value={80} suffix='%' label='Average Savings' desc='Compared to US prices' color='#A78BFA' active={statsVisible} />
                     <StatNum value={49} suffix='/5' label='Patient Rating' desc='Based on 10,000+ reviews' color={T.green} active={statsVisible} />
                 </div>
-            </section>
+            </section> */}
 
             {/* ── HOW IT WORKS ── */}
-            <section style={{ padding: '100px 56px', maxWidth: 1200, margin: '0 auto' }}>
+            <section style={{ padding: '10px 56px 100px', maxWidth: 1200, margin: '0 auto' }}>
                 <div style={{ textAlign: 'center', marginBottom: 72 }}>
                     <Pill color={T.goldL}>Process</Pill>
                     <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 48, fontWeight: 900, lineHeight: 1.15, marginTop: 16 }}>
@@ -495,12 +572,12 @@ const LandingPage = () => {
                                 {/* hospital image placeholder */}
                                 <div style={{
                                     height: 120, borderRadius: 12, marginBottom: 20,
-                                    background: `linear-gradient(135deg, ${T.teal}18, ${T.gold}0F)`,
+                                    background: (h.cover_photo_url || h.profile_photo_url) ? `url(${h.cover_photo_url || h.profile_photo_url}) center/cover no-repeat` : `linear-gradient(135deg, ${T.teal}18, ${T.gold}0F)`,
                                     border: `1px solid ${T.border}`,
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                     fontSize: 40, position: 'relative', overflow: 'hidden',
                                 }}>
-                                    🏥
+                                    {!(h.cover_photo_url || h.profile_photo_url) && '🏥'}
                                     <div style={{ position: 'absolute', top: 10, right: 10 }}>
                                         <Pill color={T.green}>JCI</Pill>
                                     </div>
@@ -546,7 +623,7 @@ const LandingPage = () => {
             </section>
 
             {/* ── TESTIMONIALS ── */}
-            <section style={{
+            {/* <section style={{
                 background: `linear-gradient(180deg, ${T.navy} 0%, ${T.navyMid} 100%)`,
                 borderTop: `1px solid ${T.border}`,
                 borderBottom: `1px solid ${T.border}`,
@@ -573,30 +650,31 @@ const LandingPage = () => {
                                 onMouseEnter={e => { e.currentTarget.style.borderColor = `${T.teal}33`; e.currentTarget.style.transform = 'translateY(-4px)'; }}
                                 onMouseLeave={e => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.transform = 'translateY(0)'; }}
                             >
-                                {/* quote mark */}
-                                <div style={{ position: 'absolute', top: 16, right: 24, fontSize: 64, lineHeight: 1, color: `${T.teal}18`, fontFamily: 'serif', pointerEvents: 'none', userSelect: 'none' }}>"</div>
-                                {/* stars */}
-                                <div style={{ display: 'flex', gap: 2, marginBottom: 16 }}>
-                                    {[...Array(5)].map((_, j) => <span key={j} style={{ color: T.goldL, fontSize: 13 }}>★</span>)}
-                                </div>
-                                <p style={{ color: T.slateL, fontSize: 14, lineHeight: 1.7, marginBottom: 20, fontStyle: 'italic' }}>"{t.text}"</p>
-                                <Rule style={{ marginBottom: 16 }} />
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: `${T.teal}22`, border: `1px solid ${T.teal}33`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: T.tealL, flexShrink: 0 }}>{t.avatar}</div>
-                                    <div>
-                                        <div style={{ fontWeight: 700, fontSize: 14 }}>{t.name}</div>
-                                        <div style={{ fontSize: 11, color: T.slateL }}>{t.loc} · {t.proc}</div>
-                                    </div>
-                                </div>
-                                <div style={{ marginTop: 10, fontSize: 11, color: T.teal }}>{t.hosp}</div>
-                            </div>
-                        ))}
-                    </div>
+                                {/* quote mark 
+            <div style={{ position: 'absolute', top: 16, right: 24, fontSize: 64, lineHeight: 1, color: `${T.teal}18`, fontFamily: 'serif', pointerEvents: 'none', userSelect: 'none' }}>"</div>
+            {/* stars 
+            <div style={{ display: 'flex', gap: 2, marginBottom: 16 }}>
+                {[...Array(5)].map((_, j) => <span key={j} style={{ color: T.goldL, fontSize: 13 }}>★</span>)}
+            </div>
+            <p style={{ color: T.slateL, fontSize: 14, lineHeight: 1.7, marginBottom: 20, fontStyle: 'italic' }}>"{t.text}"</p>
+            <Rule style={{ marginBottom: 16 }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 40, height: 40, borderRadius: '50%', background: `${T.teal}22`, border: `1px solid ${T.teal}33`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: T.tealL, flexShrink: 0 }}>{t.avatar}</div>
+                <div>
+                    <div style={{ fontWeight: 700, fontSize: 14 }}>{t.name}</div>
+                    <div style={{ fontSize: 11, color: T.slateL }}>{t.loc} · {t.proc}</div>
                 </div>
-            </section>
+            </div>
+            <div style={{ marginTop: 10, fontSize: 11, color: T.teal }}>{t.hosp}</div>
+        </div>
+    ))
+}
+                    </div >
+                </div >
+            </section > */}
 
             {/* ── CTA BANNER ── */}
-            <section style={{ padding: '80px 56px' }}>
+            <section style={{ padding: '8px 56px 80px' }}>
                 <div style={{
                     maxWidth: 1200, margin: '0 auto',
                     background: `linear-gradient(135deg, ${T.teal}22 0%, ${T.navyMid} 50%, ${T.gold}10 100%)`,
@@ -654,7 +732,7 @@ const LandingPage = () => {
                     <div style={{ fontSize: 12, color: T.slateL }}>© 2026 GlobalCare™ Medical Tourism Platform. All rights reserved.</div>
                 </div>
             </footer>
-        </div>
+        </div >
     );
 };
 
