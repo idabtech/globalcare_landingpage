@@ -5,6 +5,10 @@ export const hospitalService = {
         const response = await api.get('/hospitals');
         return response.data;
     },
+    getPublicStats: async () => {
+        const response = await api.get('/hospitals/public-stats');
+        return response.data;
+    },
     getHospitalById: async () => {
         const response = await api.get(`/hospitals/my`);
         return response.data;

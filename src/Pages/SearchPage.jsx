@@ -29,7 +29,7 @@ const SearchPage = () => {
             ) &&
             (selectedSpecialty === "All" ||
                 h.specialties?.includes(selectedSpecialty)
-            ) && 
+            ) &&
             (selectedRegion === "All Regions" ||
                 h.country === selectedRegion
             )
@@ -85,7 +85,7 @@ const SearchPage = () => {
                 </div>
                 <div style={{ display: "flex", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="🔍 Search hospital, country, specialty..." style={{ flex: 1, minWidth: 260, padding: "12px 18px", borderRadius: 12, background: C.card, border: `1px solid ${C.border}`, color: C.black, fontSize: 14, outline: "none" }} />
-                    <select value={selectedRegion} onChange={e => setSelectedRegion(e.target.value)} style={{ padding: "0 18px", borderRadius: 12, border: `1px solid ${C.border}`, color: C.black }}>
+                    <select value={selectedRegion} onChange={e => setSelectedRegion(e.target.value)} style={{ padding: "0 18px", borderRadius: 12, border: `1px solid ${C.border}`, color: C.black, background: C.card }}>
                         {allRegions.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                 </div>

@@ -18,6 +18,7 @@ const HospitalDetails = () => {
     const [selectedSpec, setSelectedSpec] = React.useState(null);
     console.log('selectedSpec', selectedSpec);
     const [bookingDoc, setBookingDoc] = React.useState(null);
+    const [isDirectBooking, setIsDirectBooking] = React.useState(false);
     const [selectedDate, setSelectedDate] = React.useState(null);
     const [selectedTime, setSelectedTime] = React.useState(null);
     const [formName, setFormName] = React.useState("");
@@ -159,6 +160,7 @@ const HospitalDetails = () => {
 
     const handleCloseModal = () => {
         setBookingDoc(null);
+        setIsDirectBooking(false);
         setSelectedDate(null);
         setSelectedTime(null);
         setBusySlots([]);
@@ -235,7 +237,7 @@ const HospitalDetails = () => {
                     <div style={{ display: "flex", gap: 4, marginTop: 32 }}>
                         {["overview", "doctors", "specialties"].map(t => {
                             return (
-                                <button key={t} onClick={() => setHospitalTab(t)} style={{ padding: "10px 20px", borderRadius: "8px 8px 0 0", cursor: "pointer", background: activeTab === t ? C.black : "transparent", color: activeTab === t ? C.tealL : C.slateL, border: activeTab === t ? `1px solid ${C.border}` : "none", borderBottom: "none", textTransform: "capitalize" }}>{t}</button>
+                                <button key={t} onClick={() => setHospitalTab(t)} style={{ padding: "10px 20px", borderRadius: "8px 8px 0 0", cursor: "pointer", background: activeTab === t ? '#6e6f701c' : "transparent", color: activeTab === t ? C.tealL : C.slateL, border: activeTab === t ? `1px solid ${C.border}` : "none", borderBottom: "none", textTransform: "capitalize" }}>{t}</button>
                             )
                         })}
                     </div>
@@ -279,7 +281,14 @@ const HospitalDetails = () => {
 
                             <Btn
                                 style={{ width: "100%", marginTop: 20 }}
-                                onClick={() => setHospitalTab("doctors")}
+                                onClick={() => {
+                                    if (h?.doctors && h.doctors.length > 0) {
+                                        setIsDirectBooking(true);
+                                        setBookingDoc(h.doctors[0]);
+                                    } else {
+                                        showNotif("No doctors available for this hospital.", "error");
+                                    }
+                                }}
                             >
                                 Book Consultation
                             </Btn>
@@ -473,6 +482,42 @@ const HospitalDetails = () => {
                             <form onSubmit={handleBookSubmit}>
                                 <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>Book Appointment</h2>
                                 <p style={{ color: C.slateL, fontSize: 13, marginBottom: 20 }}>Fill in the details to schedule a consultation.</p>
+
+                                {/* Choose Doctor Dropdown */}
+                                {isDirectBooking && h?.doctors && h.doctors.length > 0 && (
+                                    <div style={{ marginBottom: 20 }}>
+                                        <label style={{ display: "block", fontSize: 12, color: C.slateL, fontWeight: 600, marginBottom: 8 }}>Choose Doctor</label>
+                                        <select
+                                            value={bookingDoc.id}
+                                            onChange={(e) => {
+                                                const docId = parseInt(e.target.value, 10);
+                                                const selectedDoc = h.doctors.find(d => d.id === docId);
+                                                if (selectedDoc) {
+                                                    setBookingDoc(selectedDoc);
+                                                    setSelectedDate(null);
+                                                    setSelectedTime(null);
+                                                }
+                                            }}
+                                            style={{
+                                                width: "100%",
+                                                padding: "10px 12px",
+                                                borderRadius: 8,
+                                                border: `1px solid ${C.border}`,
+                                                background: C.white,
+                                                color: C.black,
+                                                fontSize: 13,
+                                                boxSizing: "border-box",
+                                                outline: "none"
+                                            }}
+                                        >
+                                            {h.doctors.map(d => (
+                                                <option key={d.id} value={d.id}>
+                                                    {d.name} ({d.specialization})
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
 
                                 {/* Doctor Summary Card inside Modal */}
                                 <div style={{ display: "flex", gap: 16, background: "rgba(255,255,255,0.02)", padding: 16, borderRadius: 12, border: `1px solid ${C.border}`, marginBottom: 20 }}>
