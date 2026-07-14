@@ -28,10 +28,10 @@ const routerData = createBrowserRouter([
                 path: "packages",
                 element: <PackagesPage />,
             },
-            {
-                path: "login",
-                element: <AuthPage />
-            }
+            // {
+            //     path: "login",
+            //     element: <AuthPage />
+            // }
         ],
     },
     {
