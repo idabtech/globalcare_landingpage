@@ -189,7 +189,7 @@ const LandingPage = () => {
             const cities = items.map(x => x.city).filter(Boolean);
             const city = cities.length > 0 ? cities[0] : '';
             const specs = [...new Set(items.flatMap(x => x.specialties || []))].slice(0, 2).join(', ');
-            
+
             const savingsValues = items.map(x => {
                 const num = parseInt(x.savings || '60', 10);
                 return isNaN(num) ? 60 : num;
@@ -445,7 +445,8 @@ const LandingPage = () => {
                         { icon: '📋', title: 'Care Coordinator', desc: 'Dedicated human coordinators manage your entire journey from first consultation to full recovery.', page: 'coordinator', accent: T.tealL },
                         { icon: '📊', title: 'Admin Dashboard', desc: 'Hospital analytics, patient management, and revenue tracking for platform operators.', page: 'coordinator', accent: T.goldL },
                     ].map(f => (
-                        <div key={f.title} onClick={() => nav(f.page)}
+                        <div key={f.title}
+                            // onClick={() => nav(f.page)}
                             style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 18, padding: '28px 28px 24px', cursor: 'pointer', transition: 'all 0.25s ease' }}
                             onMouseEnter={e => onHover(e, true)}
                             onMouseLeave={e => onHover(e, false)}
@@ -453,7 +454,7 @@ const LandingPage = () => {
                             <div style={{ width: 48, height: 48, borderRadius: 14, background: `${f.accent}18`, border: `1px solid ${f.accent}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, marginBottom: 18 }}>{f.icon}</div>
                             <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>{f.title}</div>
                             <div style={{ color: T.slateL, fontSize: 13, lineHeight: 1.65 }}>{f.desc}</div>
-                            <div style={{ marginTop: 18, color: f.accent, fontSize: 12, fontWeight: 700, letterSpacing: '0.04em' }}>EXPLORE →</div>
+                            {/* <div style={{ marginTop: 18, color: f.accent, fontSize: 12, fontWeight: 700, letterSpacing: '0.04em' }}>EXPLORE →</div> */}
                         </div>
                     ))}
                 </div>
@@ -584,12 +585,12 @@ const LandingPage = () => {
                                 </div>
                                 <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4, lineHeight: 1.3 }}>{h.name}</div>
                                 <div style={{ fontSize: 13, color: T.slateL, marginBottom: 10 }}>{h.city}, {h.country}</div>
-                                <div style={{ display: 'flex', gap: 2, marginBottom: 14 }}>
+                                {/* <div style={{ display: 'flex', gap: 2, marginBottom: 14 }}>
                                     {[...Array(5)].map((_, j) => (
                                         <span key={j} style={{ color: j < Math.floor(h.rating || 4) ? T.goldL : T.slate, fontSize: 12 }}>&#9733;</span>
                                     ))}
                                     <span style={{ fontSize: 12, color: T.slateL, marginLeft: 4 }}>{h.rating || '4.5'}</span>
-                                </div>
+                                </div> */}
                                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 18 }}>
                                     {h.specialties?.slice(0, 3).map(s => <Pill key={s} color={T.slateL}>{s}</Pill>)}
                                 </div>
