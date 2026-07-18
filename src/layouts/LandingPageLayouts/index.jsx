@@ -20,7 +20,7 @@ const LandingPageLayout = () => {
     return (
         <div style={{ minHeight: '100vh', background: "white", color: C.black }} className='llllllllllllllll'>
             <Navbar />
-            <main style={{ padding: '28px 0px' }}>
+            <main>
                 <Outlet />
             </main>
         </div>

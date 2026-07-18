@@ -4,6 +4,7 @@ import { C } from '../constants/data';
 import Btn from '../ui/Btn';
 import { useNavigate } from 'react-router-dom';
 import { hospitalService } from '../service/hospital.service';
+import logo from '../assets/1PAss Name .svg'
 
 /* ─── Design tokens ──────────────────────────────────────────── */
 const T = {
@@ -724,14 +725,11 @@ const LandingPage = () => {
             </section>
 
             {/* ── FOOTER ── */}
-            <footer style={{ borderTop: `1px solid ${T.border}`, padding: '32px 56px', margin: '0 auto' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div style={{ width: 32, height: 32, borderRadius: 8, background: `linear-gradient(135deg, ${T.teal}, ${T.tealL})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🌐</div>
-                        <span style={{ fontSize: 18, fontWeight: 800, background: `linear-gradient(90deg, ${T.tealL}, ${T.goldL})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>GlobalCare™</span>
-                    </div>
-                    <div style={{ fontSize: 12, color: T.slateL }}>© 2026 GlobalCare™ Medical Tourism Platform. All rights reserved.</div>
+            <footer style={{ padding: "20px 25px", borderTop: `1px solid ${C.border}`, textAlign: "center", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "35px", width: "150px", overflow: "hidden", position: "relative" }}>
+                    <img src={logo} alt="1Pass" style={{ height: "150px", width: "150px", position: "absolute", left: 0, objectFit: "contain" }} />
                 </div>
+                <div style={{ fontSize: 12, color: C.slateL }}>© 2026 1Pass™ Medical Tourism Platform. HIPAA & GDPR Compliant.</div>
             </footer>
         </div >
     );
