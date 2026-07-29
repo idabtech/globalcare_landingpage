@@ -472,7 +472,7 @@ const HospitalDetails = () => {
                                     </div>
                                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 14 }}>
                                         <span style={{ color: C.slateL }}>Time Slot:</span>
-                                        <span style={{ fontWeight: 600 }}>{bookingSuccess.time} AM/PM</span>
+                                        <span style={{ fontWeight: 600 }}>{bookingSuccess.time}</span>
                                     </div>
                                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
                                         <span style={{ color: C.slateL }}>Confirmation Email:</span>
