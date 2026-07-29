@@ -16,7 +16,6 @@ const HospitalDetails = () => {
 
     // Booking states
     const [selectedSpec, setSelectedSpec] = React.useState(null);
-    console.log('selectedSpec', selectedSpec);
     const [bookingDoc, setBookingDoc] = React.useState(null);
     const [isDirectBooking, setIsDirectBooking] = React.useState(false);
     const [selectedDate, setSelectedDate] = React.useState(null);
@@ -140,7 +139,6 @@ const HospitalDetails = () => {
                 notes: formNotes,
                 duration: duration,
             };
-            console.log('payload', payload);
             await hospitalService.bookAppointment(payload);
             setBookingSuccess({
                 doctorName: bookingDoc.name,
@@ -219,6 +217,12 @@ const HospitalDetails = () => {
             setCurrentMonth(currentMonth + 1);
         }
     };
+
+    React.useEffect(() => {
+        if (bookingDoc) {
+            setSelectedSpec(bookingDoc.specialization);
+        }
+    }, [bookingDoc]);
 
     return (
         <div style={{ paddingTop: 10, minHeight: "100vh" }}>
