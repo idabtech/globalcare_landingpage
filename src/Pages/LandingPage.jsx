@@ -729,7 +729,7 @@ const LandingPage = () => {
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "35px", width: "150px", overflow: "hidden", position: "relative" }}>
                     <img src={logo} alt="1Pass" style={{ height: "150px", width: "150px", position: "absolute", left: 0, objectFit: "contain" }} />
                 </div>
-                <div style={{ fontSize: 12, color: C.slateL }}>© 2026 1Pass™ Medical Tourism Platform. HIPAA & GDPR Compliant.</div>
+                <div style={{ fontSize: 12, color: C.slateL }}>© 2026 1Pass<sup>R</sup> Medical SaaS. HIPAA & GDPR Compliant.</div>
             </footer>
         </div >
     );
